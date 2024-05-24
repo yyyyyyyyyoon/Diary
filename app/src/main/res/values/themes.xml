@@ -1,0 +1,9 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme._08Chapter_diary" parent="Theme.Material3.DayNight">
+        <!-- Customize your light theme here. -->
+        <item name="colorPrimary">#FFED6D</item>
+    </style>
+
+    <style name="Theme._08Chapter_diary" parent="Base.Theme._08Chapter_diary" />
+</resources>
