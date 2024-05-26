@@ -2,12 +2,17 @@ package com.example.a08chapter_diary;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.widget.CalendarView;
 import android.widget.Button;
-import android.widget.DatePicker;
+
 import android.widget.EditText;
 import android.widget.Toast;
-
+import android.view.MenuItem;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+
+import android.view.MenuItem;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -16,10 +21,12 @@ import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
 
-    DatePicker dp;
+    CalendarView cv;
     EditText edtDiary;
     Button btnWrite;
     String fileName;
+    BottomNavigationView bottomNavigationView;
+    MenuItem menuItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,20 +34,34 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         setTitle("Diary");
 
-        dp = findViewById(R.id.datePicker1);
+        bottomNavigationView = findViewById(R.id.bottomNavi);
+        getSupportFragmentManager().beginTransaction().add(R.id.main_frame, new Fragment1()).commit();
+        //처음화면
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                if (menuItem.getItemId() == R.id.item_fragment1) {
+                    getSupportFragmentManager().beginTransaction().replace(R.id.main_frame, new Fragment1()).commit();
+                }
+                else if (menuItem.getItemId() == R.id.item_fragment2) {
+                    getSupportFragmentManager().beginTransaction().replace(R.id.main_frame, new Fragment2()).commit();
+                }
+                else if (menuItem.getItemId() == R.id.item_fragment3) {
+                    getSupportFragmentManager().beginTransaction().replace(R.id.main_frame, new Fragment3()).commit();
+                }
+                return true;
+            }
+        });
+
+
+        cv = findViewById(R.id.calendarView);
         edtDiary = findViewById(R.id.edtDiary);
         btnWrite = findViewById(R.id.btnWrite);
 
-        Calendar cal = Calendar.getInstance();
-        int cYear = cal.get(Calendar.YEAR);
-        int cMonth = cal.get(Calendar.MONTH);
-        int cDay = cal.get(Calendar.DAY_OF_MONTH);
-
-        dp.init(cYear, cMonth, cDay, new DatePicker.OnDateChangedListener() {
-            public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                fileName = Integer.toString(year) + "_"
-                        + Integer.toString(monthOfYear + 1) + "_"
-                        + Integer.toString(dayOfMonth) + ".txt";
+        cv.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+            @Override
+            public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
+                fileName = year + "_" + (month + 1) + "_" + dayOfMonth + ".txt";
                 String str = readDiary(fileName);
                 edtDiary.setText(str);
                 btnWrite.setEnabled(true);
