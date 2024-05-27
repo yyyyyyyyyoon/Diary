@@ -7,42 +7,58 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".MainActivity"
-    tools:ignore="ExtraText"
-    >
+    tools:ignore="ExtraText">
 
-    <CalendarView
-        android:id="@+id/calendarView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginTop="8dp"
-        android:calendarViewShown="false" />
-
-    <EditText
-        android:id="@+id/edtDiary"
-        android:layout_width="match_parent"
-        android:layout_height="270dp"
-        android:background="#FFFFDA"
-        android:lines="8"
-        android:text="Enter your diary here"/>
-
-    <Button
-        android:id="@+id/btnWrite"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:enabled="false"
-        android:text="Button"
-        android:background="#FFED6D"/>
-    <FrameLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" >
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="8dp">
+
+            <CalendarView
+                android:id="@+id/calendarView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:calendarViewShown="false" />
+
+            <EditText
+                android:id="@+id/edtDiary"
+                android:layout_width="match_parent"
+                android:layout_height="270dp"
+                android:background="#FFFFDA"
+                android:lines="8"
+                android:hint="Enter your diary here"
+                android:padding="8dp"
+                android:imeOptions="actionDone"
+                android:inputType="text"/>
+
+            <Button
+                android:id="@+id/btnWrite"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:enabled="false"
+                android:text="저장"
+                android:background="#FFED6D"
+                android:layout_marginTop="8dp" />
+        </LinearLayout>
+    </ScrollView>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
         <FrameLayout
             android:id="@+id/main_frame"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
+
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottomNavi"
             android:layout_width="match_parent"

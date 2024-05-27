@@ -2,10 +2,14 @@ package com.example.a08chapter_diary;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.view.KeyEvent;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.CalendarView;
 import android.widget.Button;
 
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.view.MenuItem;
 import androidx.appcompat.app.AppCompatActivity;
@@ -33,6 +37,23 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setTitle("Diary");
+
+        EditText editText = findViewById(R.id.edtDiary);
+        editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    // 키보드 내리기
+                    editText.clearFocus();
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    if (imm != null) {
+                        imm.hideSoftInputFromWindow(edtDiary.getWindowToken(), 0);
+                    }
+                    return true;
+                }
+                return false;
+            }
+        });
 
         bottomNavigationView = findViewById(R.id.bottomNavi);
         getSupportFragmentManager().beginTransaction().add(R.id.main_frame, new Fragment1()).commit();
