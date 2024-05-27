@@ -1,7 +1,10 @@
 package com.example.a08chapter_diary;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.KeyEvent;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
@@ -9,6 +12,7 @@ import android.widget.CalendarView;
 import android.widget.Button;
 
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.view.MenuItem;
@@ -31,12 +35,17 @@ public class MainActivity extends AppCompatActivity {
     String fileName;
     BottomNavigationView bottomNavigationView;
     MenuItem menuItem;
+    SharedPreferences prefs;
+    int saveCount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setTitle("Diary");
+
+        prefs = getSharedPreferences("DiaryPrefs", Context.MODE_PRIVATE);
+        saveCount = prefs.getInt("saveCount", 0);
 
         EditText editText = findViewById(R.id.edtDiary);
         editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -95,7 +104,22 @@ public class MainActivity extends AppCompatActivity {
                 String str = edtDiary.getText().toString();
                 outFs.write(str.getBytes());
                 outFs.close();
-                Toast.makeText(getApplicationContext(), fileName + "이 저장됨", Toast.LENGTH_SHORT).show();
+
+                //저장 횟수 증가 및 저장
+                saveCount++;
+                SharedPreferences.Editor editor = prefs.edit();
+                editor.putInt("saveCount", saveCount);
+                editor.apply();
+
+                //다이얼로그 표시
+                showCustomDialog(saveCount);
+
+                //저장 횟수 초기화
+                if (saveCount == 4) {
+                    saveCount = 0;
+                    editor.putInt("saveCount", saveCount);
+                    editor.apply();
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -114,9 +138,41 @@ public class MainActivity extends AppCompatActivity {
             diaryStr = (new String(txt)).trim();
             btnWrite.setText("수정하기");
         } catch (IOException e) {
-            edtDiary.setHint("일기 없음");
+            edtDiary.setHint("오늘의 일기를 작성하세요");
             btnWrite.setText("일기 저장");
         }
         return diaryStr;
+    }
+    // 커스텀 다이얼로그 표시 메소드
+    void showCustomDialog(int count) {
+        Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.dialog_custom);
+
+        ImageView imageView = dialog.findViewById(R.id.image);
+        TextView textView = dialog.findViewById(R.id.text);
+
+        switch (count) {
+            case 1:
+                imageView.setImageResource(R.drawable.seeds);
+                textView.setText("씨앗을 얻었습니다! (1/4)");
+                break;
+            case 2:
+                imageView.setImageResource(R.drawable.small_sprout);
+                textView.setText("작은 새싹을 얻었습니다! (2/4)");
+                break;
+            case 3:
+                imageView.setImageResource(R.drawable.big_sprout);
+                textView.setText("큰 새싹을 얻었습니다! (3/4)");
+                break;
+            case 4:
+                imageView.setImageResource(R.drawable.flower);
+                textView.setText("꽃을 얻었습니다! (4/4)");
+                break;
+        }
+
+        dialog.show();
+
+        // 3초 후 다이얼로그 닫기
+        new Handler().postDelayed(dialog::dismiss, 3000);
     }
 }

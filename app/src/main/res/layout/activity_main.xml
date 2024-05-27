@@ -34,7 +34,7 @@
                 android:layout_height="270dp"
                 android:background="#FFFFDA"
                 android:lines="8"
-                android:hint="Enter your diary here"
+                android:hint="오늘의 일기를 작성하세요"
                 android:padding="8dp"
                 android:imeOptions="actionDone"
                 android:inputType="text"/>
@@ -44,7 +44,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:enabled="false"
-                android:text="저장"
+                android:text="일기 저장"
                 android:background="#FFED6D"
                 android:layout_marginTop="8dp" />
         </LinearLayout>
@@ -69,4 +69,27 @@
             app:labelVisibilityMode="unlabeled"
             app:menu="@menu/navigation_bar" />
     </FrameLayout>
+
+    <RelativeLayout
+        android:id="@+id/custom_dialog_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="10dp"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/image"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:scaleType="fitCenter" />
+
+        <TextView
+            android:id="@+id/text"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignBottom="@id/image"
+            android:layout_toRightOf="@id/image"
+            android:layout_marginLeft="10dp"
+            android:textColor="#000" />
+    </RelativeLayout>
 </LinearLayout>
