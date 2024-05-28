@@ -124,7 +124,7 @@ public class Fragment1 extends Fragment {
     // 커스텀 다이얼로그 표시 메소드
     void showCustomDialog(int count) {
         Dialog dialog = new Dialog(getActivity());
-        dialog.setContentView(R.layout.dialog_custom);
+        dialog.setContentView(R.layout.dialog_f1);
 
         ImageView imageView = dialog.findViewById(R.id.image);
         TextView textView = dialog.findViewById(R.id.text);
