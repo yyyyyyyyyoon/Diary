@@ -4,16 +4,16 @@
         android:id="@+id/item_fragment1"
         android:enabled="true"
         android:icon="@drawable/nv_calendar"
-        android:title="calendar" />
+        android:title="일기" />
     <item
         android:id="@+id/item_fragment2"
         android:enabled="true"
         android:icon="@drawable/nv_seedling"
-        android:title="flower" />
+        android:title="꽃" />
     <item
         android:id="@+id/item_fragment3"
         android:enabled="true"
         android:icon="@drawable/nv_settings"
-        android:title="settings" />
+        android:title="설정" />
 
 </menu>
