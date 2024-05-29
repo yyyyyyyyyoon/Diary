@@ -6,9 +6,12 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Handler;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +30,7 @@ import java.io.IOException;
 import java.util.Random;
 
 
+
 public class Fragment1 extends Fragment {
 
     CalendarView cv;
@@ -35,6 +39,14 @@ public class Fragment1 extends Fragment {
     String fileName;
     SharedPreferences prefs;
     int saveCount;
+    private FlowerViewModel flowerViewModel;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        flowerViewModel = new ViewModelProvider(requireActivity()).get(FlowerViewModel.class);
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -83,18 +95,22 @@ public class Fragment1 extends Fragment {
 
                 //저장 횟수 증가 및 저장
                 saveCount++;
+
                 SharedPreferences.Editor editor = prefs.edit();
                 editor.putInt("saveCount", saveCount);
                 editor.apply();
 
                 //다이얼로그 표시
                 showCustomDialog(saveCount);
+                Log.d("Fragment1", "Save Count: " + saveCount);
 
                 //저장 횟수 초기화
                 if (saveCount == 4) {
                     saveCount = 0;
                     editor.putInt("saveCount", saveCount);
                     editor.apply();
+                    Log.d("Fragment1", "Save Count reset to 0");
+
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -156,6 +172,13 @@ public class Fragment1 extends Fragment {
             case 4:
                 imageView.setImageResource(flowerImages[randomNumber]);
                 textView.setText(flowerName + "을/를 얻었습니다. 꽃말은 '" + flowerMessage + "'입니다!");
+
+                // FlowerViewModel을 사용하여 선택된 꽃 이미지 설정
+                if (flowerViewModel != null) {
+                    flowerViewModel.selectFlower(flowerImages[randomNumber]);
+                } else {
+                    Log.e("Fragment1", "flowerViewModel is null");
+                }
                 break;
         }
 

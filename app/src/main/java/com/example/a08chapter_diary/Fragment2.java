@@ -5,7 +5,10 @@ import android.content.Context;
 import android.media.Image;
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,16 +17,20 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 
-public class Fragment2 extends Fragment {
+import java.util.ArrayList;
 
-    private int[] data = {
-            R.drawable.flower1,
-            R.drawable.flower2,
-            R.drawable.flower3,
-            R.drawable.flower4
-    };
+import kotlinx.coroutines.flow.Flow;
+
+public class Fragment2 extends Fragment {
+    private FlowerViewModel flowerViewModel;
     private Adapter adapter =null;
     private GridView gridView = null;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        flowerViewModel = new ViewModelProvider(requireActivity()).get(FlowerViewModel.class);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -31,20 +38,43 @@ public class Fragment2 extends Fragment {
         View view = inflater.inflate(R.layout.fragment_2, container, false);
 
         gridView = view.findViewById(R.id.gridView1);
-        adapter = new Adapter(getActivity(), data);
+        adapter = new Adapter(getActivity());
         gridView.setAdapter(adapter);
+
+        // LiveData를 관찰하여 데이터가 변경될 때마다 그리드뷰 갱신
+        flowerViewModel.getSelectedFlower().observe(getViewLifecycleOwner(), new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer flowerId) {
+                if (flowerId != null) {
+                    adapter.addFlowerImage(flowerId);
+                }
+            }
+        });
+
 
         return view;
     }
 
     public class Adapter extends BaseAdapter {
         Context context;
-        public Adapter(Context c, int[] data) {
+        private ArrayList<Integer> flowerImages;
+
+        public Adapter(Context c) {
             context = c;
+            flowerImages = new ArrayList<>();
+
         }
-        public int getCount() { return data.length; } //그리드뷰에 보일 이미지 개수 반환
-        public Object getItem(int arg0) { return null; }
-        public long getItemId(int arg0) { return 0; }
+        public void addFlowerImage(int flowerImage) {
+            flowerImages.add(flowerImage);
+            notifyDataSetChanged();
+        }
+        public int getCount() { return flowerImages.size(); } //그리드뷰에 보일 이미지 개수 반환
+        public Object getItem(int position) {
+            return flowerImages.get(position);
+        }
+        public long getItemId(int position) {
+            return position;
+        }
         public View getView(int position, View convertView, ViewGroup parent) {
             ImageView imageView;
 
@@ -56,16 +86,14 @@ public class Fragment2 extends Fragment {
             }else{
                 imageView = (ImageView) convertView;
             }
-            imageView.setImageResource(data[position]);
-
-            final int pos = position;
+            imageView.setImageResource(flowerImages.get(position));
             imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
                 public void onClick(View v) {
-                    View dialogView = (View) View.inflate(getActivity(), R.layout.dialog_f2, null);
-                    //getActivity()는 프래그먼트의 Activity 반환 (Context를 얻기 위함)
-                    AlertDialog.Builder dlg = new AlertDialog.Builder(getActivity());
-                    ImageView flowerInfo = (ImageView) dialogView.findViewById(R.id.flowerInfo);
-                    flowerInfo.setImageResource(data[pos]);
+                    View dialogView = View.inflate(context, R.layout.dialog_f2, null);
+                    AlertDialog.Builder dlg = new AlertDialog.Builder(context);
+                    ImageView flowerInfo = dialogView.findViewById(R.id.flowerInfo);
+                    flowerInfo.setImageResource(flowerImages.get(position));
                     dlg.setView(dialogView);
                     dlg.setNegativeButton("닫기", null);
                     dlg.show();
@@ -74,6 +102,6 @@ public class Fragment2 extends Fragment {
 
             return imageView;
 
+        }
     }
-}
 }
