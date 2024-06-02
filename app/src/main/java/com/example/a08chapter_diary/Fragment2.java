@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import kotlinx.coroutines.flow.Flow;
 
@@ -42,30 +44,30 @@ public class Fragment2 extends Fragment {
         gridView.setAdapter(adapter);
 
         // LiveData를 관찰하여 데이터가 변경될 때마다 그리드뷰 갱신
-        flowerViewModel.getSelectedFlower().observe(getViewLifecycleOwner(), new Observer<Integer>() {
+        flowerViewModel.getFlowerImages().observe(getViewLifecycleOwner(), new Observer<List<Integer>>() {
             @Override
-            public void onChanged(Integer flowerId) {
-                if (flowerId != null) {
-                    adapter.addFlowerImage(flowerId);
+            public void onChanged(List<Integer> flowerImages) {
+                if (flowerImages != null) {
+                    adapter.setFlowerImages(flowerImages);
                 }
             }
         });
 
-
         return view;
     }
 
+
     public class Adapter extends BaseAdapter {
         Context context;
-        private ArrayList<Integer> flowerImages;
+        private List<Integer> flowerImages;
 
         public Adapter(Context c) {
             context = c;
             flowerImages = new ArrayList<>();
 
         }
-        public void addFlowerImage(int flowerImage) {
-            flowerImages.add(flowerImage);
+        public void setFlowerImages(List<Integer> flowerImages) {
+            this.flowerImages = flowerImages;
             notifyDataSetChanged();
         }
         public int getCount() { return flowerImages.size(); } //그리드뷰에 보일 이미지 개수 반환
