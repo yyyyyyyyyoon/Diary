@@ -173,9 +173,9 @@ public class Fragment1 extends Fragment {
                 imageView.setImageResource(flowerImages[randomNumber]);
                 textView.setText(flowerName + "을/를 얻었습니다. 꽃말은 '" + flowerMessage + "'입니다!");
 
-                // FlowerViewModel을 사용하여 선택된 꽃 이미지 설정
+                // FlowerViewModel을 사용하여 선택된 꽃 정보 설정
                 if (flowerViewModel != null) {
-                    flowerViewModel.selectFlower(flowerImages[randomNumber]);
+                    flowerViewModel.selectFlower(flowerImages[randomNumber], flowerNames[randomNumber], flowerMessages[randomNumber]);
                 } else {
                     Log.e("Fragment1", "flowerViewModel is null");
                 }

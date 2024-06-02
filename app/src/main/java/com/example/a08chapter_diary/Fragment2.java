@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,9 +47,9 @@ public class Fragment2 extends Fragment {
         // LiveData를 관찰하여 데이터가 변경될 때마다 그리드뷰 갱신
         flowerViewModel.getFlowerImages().observe(getViewLifecycleOwner(), new Observer<List<Integer>>() {
             @Override
-            public void onChanged(List<Integer> flowerImages) {
-                if (flowerImages != null) {
-                    adapter.setFlowerImages(flowerImages);
+            public void onChanged(List<Integer> Images) {
+                if (Images != null) {
+                    adapter.setFlowerImages(Images);
                 }
             }
         });
@@ -88,14 +89,27 @@ public class Fragment2 extends Fragment {
             }else{
                 imageView = (ImageView) convertView;
             }
-            imageView.setImageResource(flowerImages.get(position));
+            int flowerImage = flowerImages.get(position);
+            imageView.setImageResource(flowerImage);
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     View dialogView = View.inflate(context, R.layout.dialog_f2, null);
                     AlertDialog.Builder dlg = new AlertDialog.Builder(context);
                     ImageView flowerInfo = dialogView.findViewById(R.id.flowerInfo);
-                    flowerInfo.setImageResource(flowerImages.get(position));
+                    TextView flowerName = dialogView.findViewById(R.id.flowerName);
+                    TextView flowerMessage = dialogView.findViewById(R.id.flowerMessage);
+
+                    List<String> names = flowerViewModel.getFlowerNames().getValue();
+                    List<String> messages = flowerViewModel.getFlowerMessages().getValue();
+
+                    if (names != null && messages != null) {
+                        int flowerPosition = flowerImages.indexOf(flowerImage);
+                        flowerInfo.setImageResource(flowerImage);
+                        flowerName.setText(names.get(flowerPosition));
+                        flowerMessage.setText(messages.get(flowerPosition));
+                    }
+
                     dlg.setView(dialogView);
                     dlg.setNegativeButton("닫기", null);
                     dlg.show();

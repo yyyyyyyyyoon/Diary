@@ -9,15 +9,34 @@ import java.util.List;
 
 public class FlowerViewModel extends ViewModel {
     private MutableLiveData<List<Integer>> flowerImages = new MutableLiveData<>(new ArrayList<>());
+    private MutableLiveData<List<String>> flowerNames = new MutableLiveData<>(new ArrayList<>());
+    private MutableLiveData<List<String>> flowerMessages = new MutableLiveData<>(new ArrayList<>());
+
     public LiveData<List<Integer>> getFlowerImages() {
         return flowerImages;
     }
-    public void selectFlower(int flowerId) {
-        List<Integer> currentFlowers = flowerImages.getValue();
-        if (currentFlowers != null) {
-            currentFlowers.add(flowerId);
-            flowerImages.setValue(currentFlowers); // 데이터를 업데이트하여 관찰자에게 알림
-        }
+
+    public LiveData<List<String>> getFlowerNames() {
+        return flowerNames;
     }
 
+    public LiveData<List<String>> getFlowerMessages() {
+        return flowerMessages;
+    }
+
+    public void selectFlower(int imageResId, String name, String message) {
+        List<Integer> currentImages = flowerImages.getValue();
+        List<String> currentNames = flowerNames.getValue();
+        List<String> currentMessages = flowerMessages.getValue();
+
+        if (currentImages != null && currentNames != null && currentMessages != null) {
+            currentImages.add(imageResId);
+            currentNames.add(name);
+            currentMessages.add(message);
+
+            flowerImages.setValue(currentImages);
+            flowerNames.setValue(currentNames);
+            flowerMessages.setValue(currentMessages);
+        }
+    }
 }
