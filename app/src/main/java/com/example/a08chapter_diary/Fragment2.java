@@ -2,6 +2,7 @@ package com.example.a08chapter_diary;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.media.Image;
 import android.os.Bundle;
 
@@ -28,6 +29,7 @@ public class Fragment2 extends Fragment {
     private FlowerViewModel flowerViewModel;
     private Adapter adapter =null;
     private GridView gridView = null;
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

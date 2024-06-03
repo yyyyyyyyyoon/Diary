@@ -95,6 +95,7 @@ public class Fragment1 extends Fragment {
 
                 //저장 횟수 증가 및 저장
                 saveCount++;
+                flowerViewModel.setSaveCount(saveCount);
 
                 SharedPreferences.Editor editor = prefs.edit();
                 editor.putInt("saveCount", saveCount);
@@ -145,12 +146,12 @@ public class Fragment1 extends Fragment {
         ImageView imageView = dialog.findViewById(R.id.image);
         TextView textView = dialog.findViewById(R.id.text);
 
-        int[] flowerImages = {R.drawable.flower1, R.drawable.flower2, R.drawable.flower3, R.drawable.flower4};
-        String[] flowerNames = {"해바라기", "튤립", "라벤더", "금계국"};
-        String[] flowerMessages = {"영원한 사랑", "사랑의 고백", "침묵과 기대", "상쾌한 기분"};
+        int[] flowerImages = {R.drawable.flower1, R.drawable.flower2, R.drawable.flower3, R.drawable.flower4, R.drawable.flower5, R.drawable.flower6, R.drawable.flower7, R.drawable.flower8};
+        String[] flowerNames = {"해바라기", "튤립", "라벤더", "금계국", "장미", "네잎클로버", "무궁화", "데이지"};
+        String[] flowerMessages = {"영원한 사랑", "사랑의 고백", "침묵과 기대", "상쾌한 기분", "정열적인 사랑", "행운, 평화, 약속", "일편단심", "겸손함"};
 
         Random random = new Random();
-        int randomNumber = random.nextInt(4);
+        int randomNumber = random.nextInt(8);
 
         // 랜덤으로 선택된 꽃 정보 설정
         String flowerName = flowerNames[randomNumber];
