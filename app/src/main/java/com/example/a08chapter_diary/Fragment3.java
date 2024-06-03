@@ -4,6 +4,8 @@ package com.example.a08chapter_diary;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.Image;
 import android.os.Bundle;
 
@@ -20,6 +22,13 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,15 +57,97 @@ public class Fragment3 extends Fragment {
         // LiveData를 관찰하여 데이터가 변경될 때마다 그리드뷰 갱신
         flowerViewModel.getFlowerImages().observe(getViewLifecycleOwner(), new Observer<List<Integer>>() {
             @Override
-            public void onChanged(List<Integer> Images) {
-                if (Images != null) {
-                    adapter.setFlowerImages(Images);
+            public void onChanged(List<Integer> flowerImages) {
+                if (flowerImages != null) {
+                    adapter.setFlowerImages(flowerImages);
                 }
             }
         });
-
+        loadFlowerDataFromFileSystem();
+        saveFlowerDataToFileSystem();
         return view;
     }
+    private void saveFlowerDataToFileSystem() {
+        Context context = requireContext(); // 이 메서드 내에서 Context를 가져옴
+
+        List<Integer> images = flowerViewModel.getFlowerImages().getValue();
+        List<String> names = flowerViewModel.getFlowerNames().getValue();
+        List<String> messages = flowerViewModel.getFlowerMessages().getValue();
+
+        if (images != null && names != null && messages != null) {
+            for (int i = 0; i < images.size(); i++) {
+                String filename = "flower_" + i + ".txt"; // 파일 이름 생성
+                String data = images.get(i) + ";" + names.get(i) + ";" + messages.get(i); // 데이터 준비
+
+                try {
+                    FileOutputStream outputStream = context.openFileOutput(filename, Context.MODE_PRIVATE);
+                    outputStream.write(data.getBytes()); // 데이터를 파일에 쓰기
+                    outputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+    private void saveFlowerDataToFileSystem(Context context) {
+        List<Integer> images = flowerViewModel.getFlowerImages().getValue();
+        List<String> names = flowerViewModel.getFlowerNames().getValue();
+        List<String> messages = flowerViewModel.getFlowerMessages().getValue();
+
+        if (images != null && names != null && messages != null) {
+            for (int i = 0; i < images.size(); i++) {
+                String filename = "flower_" + i + ".txt"; // 파일 이름 생성
+                String data = images.get(i) + ";" + names.get(i) + ";" + messages.get(i); // 데이터 준비
+
+                try {
+                    FileOutputStream outputStream = context.openFileOutput(filename, Context.MODE_PRIVATE);
+                    outputStream.write(data.getBytes()); // 데이터를 파일에 쓰기
+                    outputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    private void loadFlowerDataFromFileSystem() {
+        List<Integer> images = new ArrayList<>();
+        List<String> names = new ArrayList<>();
+        List<String> messages = new ArrayList<>();
+
+        File[] files = getContext().getFilesDir().listFiles(); // 파일 디렉토리에서 파일 목록 가져오기
+
+        if (files != null) {
+            for (File file : files) {
+                if (file.getName().startsWith("flower_")) {
+                    try {
+                        FileInputStream inputStream = new FileInputStream(file);
+                        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+
+                        String line = reader.readLine();
+                        if (line != null) {
+                            String[] parts = line.split(";");
+                            if (parts.length == 3) {
+                                images.add(Integer.parseInt(parts[0]));
+                                names.add(parts[1]);
+                                messages.add(parts[2]);
+                            }
+                        }
+
+                        reader.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+
+        // FlowerViewModel에 설정
+        flowerViewModel.setFlowerImages(images);
+        flowerViewModel.setFlowerNames(names);
+        flowerViewModel.setFlowerMessages(messages);
+    }
+
 
 
     public class Adapter extends BaseAdapter {
