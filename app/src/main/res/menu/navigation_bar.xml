@@ -9,9 +9,14 @@
         android:id="@+id/item_fragment2"
         android:enabled="true"
         android:icon="@drawable/nv_seedling"
-        android:title="꽃" />
+        android:title="성장 현황" />
     <item
         android:id="@+id/item_fragment3"
+        android:enabled="true"
+        android:icon="@drawable/nv_flower"
+        android:title="꽃 목록" />
+    <item
+        android:id="@+id/item_fragment4"
         android:enabled="true"
         android:icon="@drawable/nv_settings"
         android:title="설정" />
