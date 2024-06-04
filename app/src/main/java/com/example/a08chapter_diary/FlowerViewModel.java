@@ -55,18 +55,5 @@ public class FlowerViewModel extends ViewModel {
 
         }
     }
-
-
-    public void setFlowerImages(List<Integer> flowerImages) {
-        this.flowerImages.setValue(flowerImages);
-    }
-
-    public void setFlowerNames(List<String> flowerNames) {
-        this.flowerNames.setValue(flowerNames);
-    }
-
-    public void setFlowerMessages(List<String> flowerMessages) {
-        this.flowerMessages.setValue(flowerMessages);
-    }
 }
 
